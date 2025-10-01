@@ -1,9 +1,9 @@
 <?php
-// Carregar variáveis de ambiente
-require_once __DIR__ . '/env_loader.php';
+// Configurações do banco de dados para produção
+// Use variáveis de ambiente para maior segurança
 
 // Detectar se está em ambiente de produção
-$isProduction = !empty($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] !== 'localhost' && $_SERVER['HTTP_HOST'] !== '127.0.0.1';
+$isProduction = !empty($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] !== 'localhost';
 
 if ($isProduction) {
     // Configurações para produção (usando variáveis de ambiente)
@@ -52,9 +52,16 @@ function fetchData($query, $params = []) {
     return $stmt->fetchAll();
 }
 
-// Função para buscar um registro
+// Função para buscar um único registro
 function fetchOne($query, $params = []) {
     $stmt = executeQuery($query, $params);
     return $stmt->fetch();
+}
+
+// Função para inserir dados e retornar o ID
+function insertData($query, $params = []) {
+    global $pdo;
+    $stmt = executeQuery($query, $params);
+    return $pdo->lastInsertId();
 }
 ?>
